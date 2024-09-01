@@ -32,3 +32,13 @@ body {
   .text--yellow{
     text-align: center;
   }
+
+  .search-input {
+    border-radius: 10px;     
+    border: 1px solid #ccc;  
+    box-sizing: border-box;  
+    cursor: pointer;
+    width: 100%;             
+    padding: 10px;           
+    outline: none;  
+  }
