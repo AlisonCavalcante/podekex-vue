@@ -2,37 +2,47 @@
   <div id="pokedex">
     <h1 class="text--yellow">Pokedex</h1>
     <input 
-    type="text"
-    class="search-input"
-    placeholder="Charmander"
-    v-model="searchQuery"
+      type="text"
+      class="search-input"
+      placeholder="Charmander"
+      v-model="searchQuery"
     >
     <div id="container">
       <PokemonCard
-       v-for="(pokemon, index) in filtered_pokemons"
-       :key="index" 
-       :pokemon="pokemon" 
+        v-for="(pokemon, index) in filtered_pokemons"
+        :key="index"
+        :pokemon="pokemon"
+        @click="openModal(pokemon)"
       />
     </div>
+    
+    <!-- Modal -->
+    <PokemonModal 
+      :visible.sync="showModal"
+      :pokemon="selectedPokemon"
+    />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import PokemonCard from './components/PokemonCard.vue';
-
+import PokemonModal from './components/PokemonModal.vue';
 
 export default {
   name: 'App',
   
   components: {
-    PokemonCard
+    PokemonCard,
+    PokemonModal
   },
 
   data() {
     return {
       pokemons: [],
       searchQuery: '',
+      selectedPokemon: null,
+      showModal: false
     }
   },
 
@@ -49,9 +59,24 @@ export default {
       })
     }
   },
+
+  methods: {
+    get_id(pokemon) {
+      return Number(pokemon.url.split("/")[6]);
+    },
+    openModal(pokemon) {
+      let idPokemon = null
+      idPokemon = this.get_id(pokemon);
+      axios.get(`https://pokeapi.co/api/v2/pokemon/${idPokemon}`).then((response) => {
+      this.selectedPokemon = response.data;
+      this.showModal = true;
+      })
+    },
+   
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-
+/* Estilos adicionais, se necessário */
 </style>

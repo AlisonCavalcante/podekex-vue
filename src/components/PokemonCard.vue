@@ -1,5 +1,5 @@
 <template>
-    <div class="pokemon-card">
+    <div class="pokemon-card"  @click="$emit('click')">
         <div class="pokemon-container-card">
             <span class="pokemon-name">
                 {{ get_name(pokemon) }}
