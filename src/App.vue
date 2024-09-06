@@ -18,6 +18,25 @@
         @click="openModal(pokemon)"
       />
     </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-controls text-center">
+      <button 
+        class="btn btn-primary" 
+        :disabled="!prevUrl" 
+        @click="prevPage"
+      >
+        Anterior
+      </button>
+      <span class="m-2">Página {{ currentPageLabel }} de {{ totalPages }}</span>
+      <button 
+        class="btn btn-primary" 
+        :disabled="!nextUrl" 
+        @click="nextPage"
+      >
+        Próxima
+      </button>
+    </div>
     
     <!-- Modal -->
     <PokemonModal 
@@ -45,14 +64,17 @@ export default {
       pokemons: [],
       searchQuery: '',
       selectedPokemon: null,
-      showModal: false
+      showModal: false,
+      totalPokemons: 0,
+      itemsPerPage: 50,
+      currentPage: 1,       
+      nextUrl: null,
+      prevUrl: null
     }
   },
 
   mounted() {
-    axios.get("https://pokeapi.co/api/v2/pokemon?limit=50&offset=50").then((response) => {
-      this.pokemons = response.data.results;
-    })
+    this.fetchPokemons("https://pokeapi.co/api/v2/pokemon?limit=50");
   },
  
   computed: {
@@ -60,10 +82,28 @@ export default {
       return this.pokemons.filter((item) => {
         return item.name.includes(this.searchQuery.toLowerCase());
       })
+    },
+    totalPages() {
+      return Math.ceil(this.totalPokemons / this.itemsPerPage);
+    },
+    currentPageLabel() {
+      return this.currentPage;
     }
   },
 
   methods: {
+    fetchPokemons(url) {
+      axios.get(url)
+        .then((response) => {
+          this.pokemons = response.data.results;
+          this.nextUrl = response.data.next;  // URL para a próxima página
+          this.prevUrl = response.data.previous;  // URL para a página anterior
+          this.totalPokemons = response.data.count;
+        })
+        .catch((error) => {
+          console.error("Failed to fetch pokemons:", error);
+        });
+    },
     get_id(pokemon) {
       return Number(pokemon.url.split("/")[6]);
     },
@@ -75,11 +115,22 @@ export default {
       this.showModal = true;
       })
     },
-   
+    nextPage() {
+      if (this.nextUrl) {
+        this.currentPage++;
+        this.fetchPokemons(this.nextUrl);
+      }
+    },
+    prevPage() {
+      if (this.prevUrl) {
+        this.currentPage--;
+        this.fetchPokemons(this.prevUrl);
+      }
+    },
   }
 };
 </script>
 
 <style lang="scss" scoped>
-/* Estilos adicionais, se necessário */
+
 </style>
