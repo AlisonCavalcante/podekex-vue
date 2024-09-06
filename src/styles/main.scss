@@ -1,6 +1,16 @@
 body {
     background: #FF0000;
 }
+
+.bg-gainsboro {
+  background-color: gainsboro;
+}
+.bg-purple {
+  background-color: #a040a0;
+}
+.bg-brown {
+  background-color: #b5651d;
+}
 #container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
