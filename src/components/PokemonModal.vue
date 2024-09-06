@@ -8,9 +8,16 @@
           </div>
           <div class="modal-body"  v-if="pokemon">
             <div class="text-center">
-                <img :src="`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`" :alt="pokemon.name" width="50%">
+                <img :src="pokemon.sprites.front_default" :alt="pokemon.name" width="30%">
             </div>
-            <!-- <p>{{ pokemon }}</p> -->
+            <div  class="d-flex justify-content-center mb-4">
+              <span v-for="(type, index) in pokemon.types"  :key="index"  :class="['p-2 ms-2', getTypeClass(type.type.name)]">{{ type.type.name }} </span>
+            </div>
+            <hr class="my-4 bg-dark">
+            <div class="d-flex justify-content-center">
+              <span class="bg-gainsboro p-2">Altura: {{pokemon.height * 2.54  }} cm</span>
+              <span class="bg-gainsboro p-2 ms-2">Peso: {{pokemon.weight *  0.453592 }} kg</span>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="closeModal">Fechar</button>
@@ -27,6 +34,28 @@
       pokemon: Object
     },
     methods: {
+      getTypeClass(type) {
+      switch (type) {
+        case 'fire':
+          return 'bg-danger text-white';
+        case 'water':
+          return 'bg-primary text-white';
+        case 'grass':
+          return 'bg-success text-white';
+        case 'electric':
+          return 'bg-warning text-dark';
+        case 'ice':
+          return 'bg-info text-dark';
+        case 'fighting':
+          return 'bg-dark text-white';
+        case 'poison':
+          return 'bg-purple text-white'; // Classe personalizada
+        case 'ground':
+          return 'bg-brown text-white'; // Classe personalizada
+        default:
+          return 'bg-gainsboro text-dark'; // Classe padrão
+      }
+    },
       closeModal() {
         this.$emit('update:visible', false);
       },
