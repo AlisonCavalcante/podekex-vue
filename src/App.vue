@@ -1,5 +1,8 @@
 <template>
   <div id="pokedex">
+    <div class="text-center">
+      <img :src="require('./assets/pokedex.png')" alt="">
+    </div>
     <h1 class="text--yellow">Pokedex</h1>
     <input 
       type="text"
